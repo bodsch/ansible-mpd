@@ -1,0 +1,8 @@
+---
+
+mpd_alarm_clock_default:
+  enable: false
+  radiostation: ''
+  cron_start:
+    enable: true
+  cron_stop: {}

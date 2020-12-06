@@ -50,27 +50,51 @@
         - mpd-start.sh
         - mpd-stop.sh
 
+    - name: ensure cron daemon is installed
+      package:
+        name: "{{ mpd_used_cron_daemon }}"
+        state: present
+
+    - name: merge alarm clock configuration between defaults and custom
+      set_fact:
+        mpd_alarm_clock: "{{ mpd_alarm_clock_default |
+          combine( mpd_alarm_clock, recursive=True ) }}"
+
+    - debug:
+        var: "{{ item }}"
+      when: item is defined
+      loop:
+        - mpd_alarm_clock
+
     - name: create cron job to start playing music
       cron:
         name: start the radio as an alarm clock
         job: /usr/local/bin/mpd-start.sh
-        minute: 55
-        hour: 5
-        weekday: 1-5
+        minute: "{{ mpd_alarm_clock.cron_start.minute | default('0') }}"
+        hour: "{{ mpd_alarm_clock.cron_start.hour | default('6') }}"
+        weekday: "{{ mpd_alarm_clock.cron_start.weekday | default('1-5') }}"
         user: root
         cron_file: mpd-as-alarm
         state: present
+      when:
+        - mpd_alarm_clock.cron_start is defined
+        - mpd_alarm_clock.cron_start.enable is defined
+        - mpd_alarm_clock.cron_start.enable
 
     - name: create cron job to stop playing music
       cron:
         name: stop the radio as an alarm clock
         job: /usr/local/bin/mpd-stop.sh
-        minute: 58
-        hour: 6
-        weekday: 1-5
+        minute: "{{ mpd_alarm_clock.cron_stop.minute | default('0') }}"
+        hour: "{{ mpd_alarm_clock.cron_stop.hour | default('6') }}"
+        weekday: "{{ mpd_alarm_clock.cron_stop.weekday | default('1-5') }}"
         user: root
         cron_file: mpd-as-alarm
         state: present
+      when:
+        - mpd_alarm_clock.cron_stop is defined
+        - mpd_alarm_clock.cron_stop.enable is defined
+        - mpd_alarm_clock.cron_stop.enable
   when:
     - mpd_alarm_clock.enable is defined
     - mpd_alarm_clock.enable

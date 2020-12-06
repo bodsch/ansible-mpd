@@ -59,6 +59,7 @@ mpd_packages:
 
 mpd_radiostations: []
 
+mpd_alarm_clock: {}
 ```
 
 ### Outputs
@@ -111,6 +112,26 @@ mpd_radiostations:
   - name: "Vox Noctem"
     url: http://r2d2.voxnoctem.com:8000/voxnoctem.mp3
 ```
+
+### alarm clock
+
+```
+mpd_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
+
+mpd_alarm_clock:
+  enable: true
+  radiostation: 'Vox Noctem'
+  cron_start:
+    enable: true
+    minute: 55
+    hour: 5
+    weekday: 1-5
+  cron_stop:
+    enable: true
+    minute: 58
+    hour: 6
+```
+
 
 ## tests
 
