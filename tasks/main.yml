@@ -1,0 +1,76 @@
+---
+
+- name: ensure mpd is installed
+  package:
+    name: "{{ mpd_packages }}"
+
+- name: add user {{ mpd_user }} to groups
+  user:
+    name: "{{ mpd_user }}"
+    groups: "{{ item }}"
+    append: true
+  loop:
+    "{{ mpd_groups | sort | unique}}"
+
+- name: ensure mpd is configured
+  template:
+    src: mpd.conf.j2
+    dest: /etc/mpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mpd
+
+- name: create radiostations
+  copy:
+    dest: "{{ mpd_playlist_directory }}/{{ item.name | replace( ' ','_') | lower }}.m3u"
+    content: |
+        {{ item.url }}#{{ item.name }}
+    owner: '{{ mpd_user }}'
+    group: '{{ mpd_group }}'
+    mode: 0644
+  loop:
+    "{{ mpd_radiostations }}"
+  notify: restart mpd
+
+- name: Service enabled and running
+  service:
+    name: mpd
+    enabled: true
+    state: started
+
+- block:
+    - name: copy alarm clock scripts
+      template:
+        src: "{{ item }}.j2"
+        dest: "/usr/local/bin/{{ item }}"
+        owner: '{{ mpd_user }}'
+        mode: 0755
+      loop:
+        - mpd-start.sh
+        - mpd-stop.sh
+
+    - name: create cron job to start playing music
+      cron:
+        name: start the radio as an alarm clock
+        job: /usr/local/bin/mpd-start.sh
+        minute: 55
+        hour: 5
+        weekday: 1-5
+        user: root
+        cron_file: mpd-as-alarm
+        state: present
+
+    - name: create cron job to stop playing music
+      cron:
+        name: stop the radio as an alarm clock
+        job: /usr/local/bin/mpd-stop.sh
+        minute: 58
+        hour: 6
+        weekday: 1-5
+        user: root
+        cron_file: mpd-as-alarm
+        state: present
+  when:
+    - mpd_alarm_clock.enable is defined
+    - mpd_alarm_clock.enable

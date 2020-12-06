@@ -1,0 +1,41 @@
+#!/bin/bash
+
+MPC=$(which mpc)
+RADIOSTATION="{{ mpd_alarm_clock.radiostation }}"
+
+[ -z "${MPC}" ] && exit 1
+[ -z "${RADIOSTATION}" ] && exit 1
+
+current_volume() {
+  echo $(${MPC} volume | awk -F': ' '{print $2}' | sed 's/%//')
+}
+
+destination_volume=35
+
+${MPC} clear
+${MPC} volume 1
+${MPC} load "${RADIOSTATION}"
+${MPC} play
+
+sleep 2s
+
+${MPC} volume 1
+
+
+vol=$(current_volume)
+
+if [ "${vol}" != "n/a" ]
+then
+
+  for v in $(seq ${vol} +1 ${destination_volume})
+  do
+    vol=$(current_volume)
+    ( [ ${vol} -eq ${destination_volume} ] || [ ${vol} -gt ${destination_volume} ] ) && break
+
+    ${MPC} volume ${v} > /dev/null
+
+    sleep 1s
+
+  done
+fi
+

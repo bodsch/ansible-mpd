@@ -21,8 +21,8 @@ script:
 # rename project directory to match Galaxy role name
 before_script:
   - cd ../
-  - mv ansible-icinga2 bodsch.icinga2
-  - cd bodsch.icinga2
+  - mv ansible-mpd bodsch.mpd
+  - cd bodsch.mpd
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

@@ -8,10 +8,10 @@ mpd_outputs:
   - name: "Alsa Output"
     type: "alsa"
     device: "hw:0,0"
-    mixer_type: "hardware"   # optional
-    mixer_device: "default"  # optional
-    mixer_control: "PCM"     # optional
-    mixer_index: "0"         # optional
+    # mixer_type: "hardware"   # optional
+    # mixer_device: "default"  # optional
+    # mixer_control: "PCM"     # optional
+    # mixer_index: "0"         # optional
 
 mpd_inputs:
   curl:
@@ -21,24 +21,8 @@ mpd_inputs:
     # proxy: "proxy.isp.com:8080"
     # proxy_user: "user"
     # proxy_password: "password"
-  qobuz:
-    enabled: false
-    app_id: "ID"
-    # app_secret: "SECRET"
-    # username: "USERNAME"
-    # password: "PASSWORD"
-    # format_id: "N"
-  tidal:
-    enabled: false
-    token: "TOKEN"
-    # username: "USERNAME"
-    # password: "PASSWORD"
-    # audioquality: "Q"
 
 mpd_database: {}
-#  plugin: "proxy"
-#  host: "other.mpd.host"
-#  port: "6600"
 
 mpd_name: Mediabox Player
 mpd_restore_paused: true
@@ -65,8 +49,10 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
-mpd_group: audio
-mpd_autostart: false
+mpd_group: nogroup
+mpd_groups:
+  - "{{ mpd_group }}"
+  - audio
 
 mpd_bind_to_address: '0.0.0.0'
 mpd_port: 6600
@@ -76,10 +62,9 @@ mpd_firewall_zones: []
 mpd_packages:
   - mpd
   - mpc
-#   - pulseaudio
 
 mpd_radiostations: []
-#   - name: "Vox Noctem"
-#     url: http://r2d2.voxnoctem.com:8000/voxnoctem.mp3
-#   - name: "SLAY Radio"
-#     url: http://relay4.slayradio.org:8000
+
+mpd_alarm_clock:
+  enable: true
+  radiostation: ''

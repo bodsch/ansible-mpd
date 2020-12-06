@@ -1,0 +1,76 @@
+
+music_directory         "{{ mpd_music_directory }}"
+playlist_directory      "{{ mpd_playlist_directory }}"
+
+db_file                 "{{ mpd_db_file }}"
+sticker_file            "{{ mpd_sticker_file }}"
+state_file              "{{ mpd_state_file }}"
+
+user                    "{{ mpd_user }}"
+group                   "{{ mpd_group }}"
+
+bind_to_address         "{{ mpd_bind_to_address }}"
+log_file                "{{ mpd_log_file }}"
+log_level               "{{ mpd_log_level }}"
+
+pid_file                "{{ mpd_pid_file }}"
+
+restore_paused          "{% if mpd_restore_paused %}yes{% else %}no{% endif %}"
+auto_update             "{% if mpd_auto_update %}yes{% else %}no{% endif %}"
+follow_inside_symlinks  "{% if mpd_follow_inside_symlinks %}yes{% else %}no{% endif %}"
+follow_outside_symlinks "{% if mpd_follow_outside_symlinks %}yes{% else %}no{% endif %}"
+
+{% if mpd_zeroconf is defined and mpd_zeroconf.enabled is defined and mpd_zeroconf.enabled == true %}
+zeroconf_enabled        "yes"
+{% else %}
+zeroconf_enabled        "no"
+{% endif %}
+{% if mpd_zeroconf is defined and mpd_zeroconf.name is defined %}
+zeroconf_name           "{{ mpd_zeroconf.name }}"
+{% else %}
+zeroconf_name           "Music Player"
+{% endif %}
+
+volume_normalization    "yes"
+
+filesystem_charset      "UTF-8"
+
+{% if mpd_database %}
+database {
+{% for k, v in mpd_database.items() %}
+  {{ k }} "{{ v }}"
+{% endfor %}
+}
+{% endif %}
+
+input {
+  plugin "curl"
+  verify_peer "yes"
+  verify_host "yes"
+}
+
+{% for input in mpd_inputs.items() | sort -%}
+input {
+{% for p in input %}
+{%- if p is string %}
+  plugin "{{ p }}"
+{% endif %}
+{%- if p is mapping %}
+{% for k, v in p.items() %}
+{%- if v == "True" or v == "False" -%}{%- if v == "True" -%}{%- set v = "yes" -%}{%- else -%} {%- set v = "no" -%}{%- endif -%}{% endif %}
+  {{ k }} "{{ v }}"
+{% endfor -%}
+{% endif %}
+{% endfor %}
+}
+
+{% endfor %}
+
+{% for output in mpd_outputs %}
+audio_output {
+{% for k, v in output.items() %}
+  {{ k }} "{{ v }}"
+{% endfor %}
+}
+
+{% endfor %}

@@ -3,4 +3,3 @@
   service:
     name: mpd
     state: restarted
-  when: mpd_autostart
