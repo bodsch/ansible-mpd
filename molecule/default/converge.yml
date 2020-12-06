@@ -16,4 +16,4 @@
       radiostation: 'Radio Dunkle Welle'
 
   roles:
-    - role: ansible-mpd
+    - role: bodsch.mpd
