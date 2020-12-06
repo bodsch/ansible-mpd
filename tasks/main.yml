@@ -10,7 +10,7 @@
     groups: "{{ item }}"
     append: true
   loop:
-    "{{ mpd_groups | sort | unique}}"
+    "{{ mpd_groups | sort | unique }}"
 
 - name: ensure mpd is configured
   template:
