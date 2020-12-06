@@ -1,0 +1,32 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Bodo Schulz
+  description: ansible role for mpd
+  license: Apapche
+  min_ansible_version: 2.9
+  platforms:
+    - name: Debian
+      versions:
+        # 9
+        - etch
+        # 10
+        - buster
+    - name: Ubuntu
+      versions:
+        # 18.04
+        - bionic
+        # 20.04
+        - focal
+    - name: EL
+      versions:
+        - 7
+        - 8
+
+  galaxy_tags:
+    - programing
+    - language
+    - php
+    - fpm
+    - web

@@ -1,0 +1,6 @@
+---
+- name: restart mpd
+  service:
+    name: mpd
+    state: restarted
+  when: mpd_autostart
