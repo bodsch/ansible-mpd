@@ -1,6 +1,8 @@
 
 Ansible role to setup mpd (Music Player Daemon)
 
+The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only available on Debian based systems, sorry.
+
 ## usage
 
 ```
@@ -10,7 +12,6 @@ mpd_outputs:
 
 mpd_inputs:
   curl:
-    enabled: true
     verify_peer: "yes"
     verify_host: "yes"
     # proxy: "proxy.isp.com:8080"
@@ -47,15 +48,9 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
-mpd_group: audio
-mpd_autostart: false
 
 mpd_bind_to_address: '0.0.0.0'
 mpd_port: 6600
-
-mpd_packages:
-  - mpd
-  - mpc
 
 mpd_radiostations: []
 
@@ -138,9 +133,7 @@ mpd_alarm_clock:
 for testing
 
 ```
-tox -e py38-ansible29 -- molecule
-
-tox -e py38-ansible29 -- molecule -s icinga2-satellite
+tox -e py38-ansible29 -- molecule test
 ```
 
 ## Troubleshooting & Known issues

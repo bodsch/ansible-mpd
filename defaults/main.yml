@@ -49,7 +49,6 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
-mpd_group: nogroup
 mpd_groups:
   - "{{ mpd_group }}"
   - audio
@@ -58,10 +57,6 @@ mpd_bind_to_address: '0.0.0.0'
 mpd_port: 6600
 
 mpd_firewall_zones: []
-
-mpd_packages:
-  - mpd
-  - mpc
 
 mpd_radiostations: []
 

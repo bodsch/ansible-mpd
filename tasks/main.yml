@@ -1,5 +1,42 @@
 ---
 
+- block:
+    - name: import EPEL GPG key.
+      rpm_key:
+        key: https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
+        state: present
+
+    - name: install EPEL repository
+      yum_repository:
+        name: epel
+        state: present
+        description: Extra Packages for Enterprise Linux {{ ansible_distribution_major_version }} - $basearch
+        baseurl: http://download.fedoraproject.org/pub/epel/{{ ansible_distribution_major_version }}/$basearch
+        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
+        metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-{{ ansible_distribution_major_version }}&arch=$basearch&infra=$infra&content=$contentdir
+        failovermethod: priority
+        gpgcheck: 1
+        enabled: 1
+
+    - name: install rpmfusion repository
+      package:
+        name: https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+        state: present
+
+    # https://bugs.centos.org/view.php?id=16604
+    - name: activate PowerTools repository
+      ini_file:
+        dest: /etc/yum.repos.d/CentOS-PowerTools.repo
+        section: PowerTools
+        option: enabled
+        value: "1"
+        mode: 0644
+      when:
+        - ansible_distribution_version | int >= 8
+        - not ansible_distribution | lower == "oraclelinux"
+
+  when: ansible_os_family | lower == 'redhat'
+
 - name: ensure mpd is installed
   package:
     name: "{{ mpd_packages }}"
@@ -19,6 +56,7 @@
     owner: root
     group: root
     mode: 0644
+    backup: true
   notify: restart mpd
 
 - name: create radiostations
@@ -32,6 +70,24 @@
   loop:
     "{{ mpd_radiostations }}"
   notify: restart mpd
+
+- block:
+    - name: ensure mpd.service.d is present
+      file:
+        dest: /etc/systemd/system/mpd.service.d
+        state: directory
+        mode: 0750
+
+    - name: create overwrite.conf for systemd
+      template:
+        src: systemd/overwrite.conf.j2
+        dest: "/etc/systemd/system/mpd.service.d/override.conf"
+      notify:
+        - systemctl daemon-reload
+        - restart mpd
+  when:
+    - ansible_os_family | lower == 'redhat'
+    - ansible_distribution_version | int == 7
 
 - name: Service enabled and running
   service:

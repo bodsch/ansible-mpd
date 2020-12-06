@@ -33,8 +33,9 @@ def test_directories(host, dirs):
 
 
 @pytest.mark.parametrize("files", [
-    "/etc/default/mpd",
-    "/etc/mpd.conf"
+    "/etc/mpd.conf",
+    "/var/lib/mpd/tag_cache",
+    "/var/lib/mpd/sticker.sql",
 ])
 def test_files(host, files):
     f = host.file(files)

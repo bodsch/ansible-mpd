@@ -43,12 +43,6 @@ database {
 }
 {% endif %}
 
-input {
-  plugin "curl"
-  verify_peer "yes"
-  verify_host "yes"
-}
-
 {% for input in mpd_inputs.items() | sort -%}
 input {
 {% for p in input %}
