@@ -9,8 +9,8 @@ env:
     - MOLECULE_DISTRO: debian10
     - MOLECULE_DISTRO: ubuntu1804
     - MOLECULE_DISTRO: ubuntu2004
-    - MOLECULE_DISTRO: centos7
-    - MOLECULE_DISTRO: centos8
+    # - MOLECULE_DISTRO: centos7
+    # - MOLECULE_DISTRO: centos8
 
 install:
   - pip install -r test-requirements.txt

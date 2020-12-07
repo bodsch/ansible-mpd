@@ -19,10 +19,10 @@ galaxy_info:
         - bionic
         # 20.04
         - focal
-    - name: EL
-      versions:
-        - 7
-        - 8
+    # - name: EL
+    #   versions:
+    #     - 7
+    #     - 8
 
   galaxy_tags:
     - programing
