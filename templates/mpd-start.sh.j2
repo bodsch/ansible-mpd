@@ -10,6 +10,13 @@ current_volume() {
   echo $(${MPC} volume | awk -F': ' '{print $2}' | sed 's/%//')
 }
 
+if [ $(${MPC} lsplaylists | grep -c ${RADIOSTATION}) -eq 0 ]
+then
+  echo "radiostation '${RADIOSTATION}' not found!"
+  echo "use ${MPC} lsplaylists to verify"
+  exit 1
+fi
+
 destination_volume=35
 
 ${MPC} clear
