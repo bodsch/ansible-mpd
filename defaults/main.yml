@@ -49,6 +49,10 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
+mpd_group: "{{
+          _mpd_group[ansible_os_family | lower] |
+  default(_mpd_group['default']) }}"
+
 mpd_groups:
   - "{{ mpd_group }}"
   - audio

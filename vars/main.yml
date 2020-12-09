@@ -29,7 +29,3 @@ mpd_packages: "{{
   default(_mpd_packages[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
   default(_mpd_packages[ansible_distribution | lower] |
   default(_mpd_packages['default'])))) }}"
-
-mpd_group: "{{
-          _mpd_group[ansible_os_family | lower] |
-  default(_mpd_group['default']) }}"

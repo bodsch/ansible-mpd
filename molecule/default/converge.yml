@@ -7,6 +7,8 @@
     NETRC: ''
 
   vars:
+    mpd_group: audio
+
     mpd_radiostations:
       - name: Radio Dunkle Welle
         url: http://164.132.13.80:5090/stream
