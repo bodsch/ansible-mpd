@@ -5,9 +5,11 @@ _mpd_packages:
     - mpd
     # https://www.musicpd.org/doc/mpc/html/
     - mpc
+    - net-tools
   debian:
     - mpd
     - mpc
+    - net-tools
   redhat:
     - mpd
 
