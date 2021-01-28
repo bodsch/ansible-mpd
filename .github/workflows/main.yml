@@ -84,6 +84,9 @@ jobs:
 
       - name: test with tox
         run: |
+          cd ../
+          mv ansible-mpd bodsch.mpd
+          cd bodsch.mpd
           tox --listenvs
           tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule converge
           tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule verify
