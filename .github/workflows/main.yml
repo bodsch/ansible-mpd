@@ -36,7 +36,7 @@ jobs:
         run: |
           yamllint .
           ansible-lint .
-          flake 8
+          flake8 .
 
   tests:
 
