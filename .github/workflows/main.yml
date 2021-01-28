@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '10 04 * * *'
 
+defaults:
+  run:
+    working-directory: 'ansible-mpd'
+
 jobs:
 
   lint:
@@ -54,7 +58,6 @@ jobs:
           - image: ubuntu
             version: "20.04"
         python-version:
-          - '3.7'
           - '3.8'
           - '3.9'
         ansible-version:
