@@ -3,6 +3,8 @@ Ansible role to setup mpd (Music Player Daemon)
 
 The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only available on Debian based systems, sorry.
 
+![Build](https://github.com/bodsch/ansible-mpd/workflows/Build/badge.svg)
+
 ## usage
 
 ```
