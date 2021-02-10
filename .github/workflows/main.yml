@@ -13,9 +13,7 @@ defaults:
     working-directory: 'ansible-mpd'
 
 jobs:
-
-  tests:
-
+  test:
     name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
     runs-on: ubuntu-18.04
     strategy:
@@ -63,7 +61,7 @@ jobs:
   publish:
     needs:
       - test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: galaxy
         uses: robertdebock/galaxy-action@1.1.0
