@@ -13,7 +13,9 @@ defaults:
     working-directory: 'ansible-mpd'
 
 jobs:
+
   tests:
+
     name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
     runs-on: ubuntu-18.04
     strategy:
@@ -57,3 +59,13 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRIBUTION: ${{ matrix.image }}
+
+  publish:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: galaxy
+        uses: robertdebock/galaxy-action@1.1.0
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}
