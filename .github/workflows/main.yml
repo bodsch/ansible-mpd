@@ -13,50 +13,17 @@ defaults:
     working-directory: 'ansible-mpd'
 
 jobs:
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v2
-        with:
-          path: 'ansible-mpd'
-
-      - name: set up python.
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: install test dependencies.
-        run: pip install -r test-requirements.txt
-
-      - name: Lint code.
-        run: |
-          yamllint .
-          ansible-lint .
-          flake8 .
-
   tests:
-
-    name: Molecule
-    runs-on: ubuntu-latest
+    name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
-
       matrix:
-        distribution:
-          - image: debian
-            version: "9"
-          - image: debian
-            version: "10"
-          - image: debian
-            version: "testing"
-          - image: ubuntu
-            version: "18.04"
-          - image: ubuntu
-            version: "20.04"
+        image:
+          - debian:9
+          - debian:10
+          - ubuntu:18.04
+          - ubuntu:20.04
         python-version:
           - '3.8'
           - '3.9'
@@ -78,21 +45,15 @@ jobs:
       - name: install dependencies
         run: |
           python -m pip install --upgrade pip
-
-      - name: install test dependencies.
-        run: pip install -r test-requirements.txt
+          pip install -r test-requirements.txt
 
       - name: test with tox
         run: |
           cd ../
           mv ansible-mpd bodsch.mpd
           cd bodsch.mpd
-          tox --listenvs
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule converge
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule verify
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule destroy
+          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: ${{ matrix.distribution.image }}
-          MOLECULE_VERSION: ${{ matrix.distribution.version }}
+          MOLECULE_DISTRIBUTION: ${{ matrix.image }}
