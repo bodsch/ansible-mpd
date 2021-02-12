@@ -6,7 +6,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: '10 04 * 0 *'
+    - cron: '10 04 * * 0'
 
 defaults:
   run:
