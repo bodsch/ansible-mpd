@@ -21,7 +21,7 @@ jobs:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
-          path: 'ansible-icinga2'
+          path: 'ansible-mpd'
 
       - name: set up python.
         uses: actions/setup-python@v2
