@@ -2,8 +2,9 @@
 dependencies: []
 
 galaxy_info:
+  role_name: mpd
   author: Bodo Schulz
-  description: ansible role for mpd
+  description: install and configure the Music Player Daemon
   license: Apapche
   min_ansible_version: 2.9
   platforms:
