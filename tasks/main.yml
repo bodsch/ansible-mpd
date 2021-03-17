@@ -117,12 +117,6 @@
         mpd_alarm_clock: "{{ mpd_alarm_clock_default |
           combine( mpd_alarm_clock, recursive=True ) }}"
 
-    - debug:
-        var: "{{ item }}"
-      when: item is defined
-      loop:
-        - mpd_alarm_clock
-
     - name: create cron job to start playing music
       cron:
         name: start the radio as an alarm clock
