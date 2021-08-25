@@ -1,4 +1,6 @@
 
+# Ansible Role:  `mpd`
+
 Ansible role to setup mpd (Music Player Daemon)
 
 The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only available on Debian based systems, sorry.
@@ -15,7 +17,7 @@ The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only a
 
 ## usage
 
-```
+```yaml
 mpd_outputs:
   - name: "Null Output"
     type: "null"
@@ -69,7 +71,7 @@ mpd_alarm_clock: {}
 
 ### Outputs
 
-```
+```yaml
 mpd_outputs:
   - name: "Null Output"
     type: "null"
@@ -86,7 +88,7 @@ mpd_outputs:
 
 ### Inputs 
 
-```
+```yaml
 mpd_inputs:
   curl:
     enabled: true
@@ -112,7 +114,7 @@ mpd_inputs:
 
 ### Radiostations
 
-```
+```yaml
 mpd_radiostations:
   - name: "Vox Noctem"
     url: http://r2d2.voxnoctem.com:8000/voxnoctem.mp3
@@ -120,7 +122,7 @@ mpd_radiostations:
 
 ### alarm clock
 
-```
+```yaml
 mpd_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
 
 mpd_alarm_clock:
@@ -142,7 +144,7 @@ mpd_alarm_clock:
 
 for testing
 
-```
+```bash
 tox -e py38-ansible29 -- molecule test
 ```
 
