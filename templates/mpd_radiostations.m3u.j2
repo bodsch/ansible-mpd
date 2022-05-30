@@ -6,6 +6,6 @@
 {{ station.url }}
   {% endfor %}
 {% else %}
-#EXTINF:1,{{ item.name }}
+#EXTINF:-1,{{ item.name }}
 {{ item.url }}
 {% endif %}
