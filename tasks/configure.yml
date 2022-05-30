@@ -1,0 +1,26 @@
+---
+
+- name: ensure mpd is configured
+  template:
+    src: mpd.conf.j2
+    dest: /etc/mpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify: restart mpd
+
+- name: create radiostations
+  template:
+    src: mpd_radiostations.m3u.j2
+    dest: "{{ mpd_playlist_directory }}/{{ item.name | encode }}.m3u"
+    owner: '{{ mpd_user }}'
+    group: '{{ mpd_group }}'
+    mode: 0644
+  loop:
+    "{{ mpd_radiostations }}"
+  loop_control:
+    label: "{{ item.name }}"
+  notify: restart mpd
+
+...

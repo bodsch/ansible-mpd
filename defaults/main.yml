@@ -49,9 +49,9 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
-mpd_group: "{{
-          _mpd_group[ansible_os_family | lower] |
-  default(_mpd_group['default']) }}"
+#mpd_group: "{{
+#          _mpd_group[ansible_os_family | lower] |
+#  default(_mpd_group['default']) }}"
 
 mpd_groups:
   - "{{ mpd_group }}"
@@ -67,14 +67,5 @@ mpd_radiostations: []
 mpd_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
 
 mpd_alarm_clock: {}
-#   enable: false
-#   radiostation: ''
-#   cron_start:
-#     enable: true
-#     minute: 55
-#     hour: 5
-#     weekday: 1-5
-#   cron_stop:
-#     enable: true
-#     minute: 58
-#     hour: 6
+
+...

@@ -3,8 +3,10 @@
 name: CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '10 04 * * 0'
 
@@ -41,10 +43,8 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - debian:9
           - debian:10
           - debian:11
-          - ubuntu:18.04
           - ubuntu:20.04
         python-version:
           - '3.9'
@@ -70,10 +70,8 @@ jobs:
 
       - name: test with tox
         run: |
-          cd ../
-          mv ansible-mpd bodsch.mpd
-          cd bodsch.mpd
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- molecule test
+          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') -- \
+            molecule test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

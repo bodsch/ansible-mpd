@@ -1,0 +1,11 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+#EXTM3U
+{% if item.stations is defined %}
+  {% for station in item.stations %}
+#EXTINF:-1,{{ station.name }}
+{{ station.url }}
+  {% endfor %}
+{% else %}
+#EXTINF:1,{{ item.name }}
+{{ item.url }}
+{% endif %}

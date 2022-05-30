@@ -1,0 +1,13 @@
+---
+
+mpd_requirements:
+  - iproute2
+
+mpd_packages:
+  - mpd
+  - mpc
+  - net-tools
+
+mpd_group: nogroup
+
+...

@@ -1,151 +1,32 @@
 ---
 
-- block:
-    - name: import EPEL GPG key.
-      rpm_key:
-        key: https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
-        state: present
+- name: prepare
+  include_tasks: prepare.yml
+  tags:
+    - mpd_prepare
+    - mpd_download
+    - mpd_install
+    - mpd_configure
 
-    - name: install EPEL repository
-      yum_repository:
-        name: epel
-        state: present
-        description: Extra Packages for Enterprise Linux {{ ansible_distribution_major_version }} - $basearch
-        baseurl: http://download.fedoraproject.org/pub/epel/{{ ansible_distribution_major_version }}/$basearch
-        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
-        metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-{{ ansible_distribution_major_version }}&arch=$basearch&infra=$infra&content=$contentdir
-        failovermethod: priority
-        gpgcheck: 1
-        enabled: 1
+- name: install
+  include_tasks: install.yml
+  tags:
+    - mpd_install
 
-    - name: install rpmfusion repository
-      package:
-        name: https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
-        state: present
+- name: configure
+  include_tasks: configure.yml
+  tags:
+    - mpd_configure
 
-    # https://bugs.centos.org/view.php?id=16604
-    - name: activate PowerTools repository
-      ini_file:
-        dest: /etc/yum.repos.d/CentOS-PowerTools.repo
-        section: PowerTools
-        option: enabled
-        value: "1"
-        mode: 0644
-      when:
-        - ansible_distribution_version | int >= 8
-        - not ansible_distribution | lower == "oraclelinux"
+- name: alarm clock
+  include_tasks: alarm-clock.yml
+  tags:
+    - mpd_configure
+    - mpd_alarm_clock
 
-  when: ansible_os_family | lower == 'redhat'
+- name: service
+  include_tasks: service.yml
+  tags:
+    - mpd_service
 
-- name: ensure mpd is installed
-  package:
-    name: "{{ mpd_packages }}"
-
-- name: add user {{ mpd_user }} to groups
-  user:
-    name: "{{ mpd_user }}"
-    groups: "{{ item }}"
-    append: true
-  loop:
-    "{{ mpd_groups | sort | unique }}"
-
-- name: ensure mpd is configured
-  template:
-    src: mpd.conf.j2
-    dest: /etc/mpd.conf
-    owner: root
-    group: root
-    mode: 0644
-    backup: true
-  notify: restart mpd
-
-- name: create radiostations
-  copy:
-    dest: "{{ mpd_playlist_directory }}/{{ item.name | replace( ' ','_') | lower }}.m3u"
-    content: |
-        {{ item.url }}#{{ item.name }}
-    owner: '{{ mpd_user }}'
-    group: '{{ mpd_group }}'
-    mode: 0644
-  loop:
-    "{{ mpd_radiostations }}"
-  notify: restart mpd
-
-- block:
-    - name: ensure mpd.service.d is present
-      file:
-        dest: /etc/systemd/system/mpd.service.d
-        state: directory
-        mode: 0750
-
-    - name: create overwrite.conf for systemd
-      template:
-        src: systemd/overwrite.conf.j2
-        dest: "/etc/systemd/system/mpd.service.d/override.conf"
-        mode: 0440
-      notify:
-        - systemctl daemon-reload
-        - restart mpd
-  when:
-    - ansible_os_family | lower == 'redhat'
-    - ansible_distribution_version | int == 7
-
-- name: Service enabled and running
-  service:
-    name: mpd
-    enabled: true
-    state: started
-
-- block:
-    - name: copy alarm clock scripts
-      template:
-        src: "{{ item }}.j2"
-        dest: "/usr/local/bin/{{ item }}"
-        owner: '{{ mpd_user }}'
-        mode: 0755
-      loop:
-        - mpd-start.sh
-        - mpd-stop.sh
-
-    - name: ensure cron daemon is installed
-      package:
-        name: "{{ mpd_used_cron_daemon }}"
-        state: present
-
-    - name: merge alarm clock configuration between defaults and custom
-      set_fact:
-        mpd_alarm_clock: "{{ mpd_alarm_clock_default |
-          combine( mpd_alarm_clock, recursive=True ) }}"
-
-    - name: create cron job to start playing music
-      cron:
-        name: start the radio as an alarm clock
-        job: /usr/local/bin/mpd-start.sh
-        minute: "{{ mpd_alarm_clock.cron_start.minute | default('0') }}"
-        hour: "{{ mpd_alarm_clock.cron_start.hour | default('6') }}"
-        weekday: "{{ mpd_alarm_clock.cron_start.weekday | default('1-5') }}"
-        user: root
-        cron_file: mpd-as-alarm
-        state: present
-      when:
-        - mpd_alarm_clock.cron_start is defined
-        - mpd_alarm_clock.cron_start.enable is defined
-        - mpd_alarm_clock.cron_start.enable
-
-    - name: create cron job to stop playing music
-      cron:
-        name: stop the radio as an alarm clock
-        job: /usr/local/bin/mpd-stop.sh
-        minute: "{{ mpd_alarm_clock.cron_stop.minute | default('0') }}"
-        hour: "{{ mpd_alarm_clock.cron_stop.hour | default('6') }}"
-        weekday: "{{ mpd_alarm_clock.cron_stop.weekday | default('1-5') }}"
-        user: root
-        cron_file: mpd-as-alarm
-        state: present
-      when:
-        - mpd_alarm_clock.cron_stop is defined
-        - mpd_alarm_clock.cron_stop.enable is defined
-        - mpd_alarm_clock.cron_stop.enable
-  when:
-    - mpd_alarm_clock.enable is defined
-    - mpd_alarm_clock.enable
+...

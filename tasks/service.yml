@@ -1,0 +1,9 @@
+---
+
+- name: service enabled and running
+  service:
+    name: mpd
+    enabled: true
+    state: started
+
+...

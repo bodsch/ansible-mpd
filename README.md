@@ -114,10 +114,18 @@ mpd_inputs:
 
 ### Radiostations
 
+The radio stations can be configured as individual stations or as a group:
+
 ```yaml
 mpd_radiostations:
-  - name: "Vox Noctem"
-    url: http://r2d2.voxnoctem.com:8000/voxnoctem.mp3
+  - name: Gothic
+    stations:
+      - name: Radio Dunkle Welle
+        url: http://164.132.13.80:5090/stream
+      - name: Mera Luna FM
+        url: http://meralunafm.radionetz.de:8000/meralunafm.mp3
+  - name: Studio Brüssel
+    url: http://icecast.vrtcdn.be/stubru-high.mp3
 ```
 
 ### alarm clock
@@ -127,7 +135,7 @@ mpd_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else '
 
 mpd_alarm_clock:
   enable: true
-  radiostation: 'Vox Noctem'
+  radiostation: 'Studio Brüssel'
   cron_start:
     enable: true
     minute: 55
@@ -138,19 +146,6 @@ mpd_alarm_clock:
     minute: 58
     hour: 6
 ```
-
-
-## tests
-
-for testing
-
-```bash
-tox -e py38-ansible29 -- molecule test
-```
-
-## Troubleshooting & Known issues
-
-
 
 ## License
 

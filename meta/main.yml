@@ -4,10 +4,12 @@ dependencies: []
 galaxy_info:
   role_name: mpd
   namespace: bodsch
+
   author: Bodo Schulz
   description: install and configure the Music Player Daemon
-  license: Apapche
-  min_ansible_version: 2.9
+
+  license: Apache
+  min_ansible_version: "2.9"
   platforms:
     - name: Debian
       versions:

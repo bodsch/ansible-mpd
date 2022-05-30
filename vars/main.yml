@@ -1,33 +1,12 @@
 ---
 
-_mpd_packages:
-  default:
-    - mpd
-    # https://www.musicpd.org/doc/mpc/html/
-    - mpc
-    - net-tools
-  debian:
-    - mpd
-    - mpc
-    - net-tools
-  redhat:
-    - mpd
+mpd_requirements: []
 
-_mpd_group:
-  default: nogroup
-  redhat: mpd
-
-
-mpd_alarm_clock_default:
+mpd_defaults_alarm_clock:
   enable: false
   radiostation: ''
   cron_start:
     enable: true
   cron_stop: {}
 
-mpd_packages: "{{
-          _mpd_packages[ansible_os_family | lower~ '-' ~ ansible_distribution_major_version] |
-  default(_mpd_packages[ansible_os_family | lower] |
-  default(_mpd_packages[ansible_distribution | lower~ '-' ~ ansible_distribution_major_version] |
-  default(_mpd_packages[ansible_distribution | lower] |
-  default(_mpd_packages['default'])))) }}"
+...
