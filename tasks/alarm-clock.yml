@@ -17,11 +17,6 @@
         name: "{{ mpd_used_cron_daemon }}"
         state: present
 
-    - name: merge alarm clock configuration between defaults and custom
-      set_fact:
-        mpd_alarm_clock: "{{ mpd_alarm_clock_default |
-          combine( mpd_alarm_clock, recursive=True ) }}"
-
     - name: create cron job to start playing music
       cron:
         name: start the radio as an alarm clock
