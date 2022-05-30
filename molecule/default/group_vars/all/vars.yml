@@ -1,0 +1,43 @@
+---
+
+mpd_group: audio
+
+mpd_inputs:
+  simple:
+    enabled: true
+    path: "{{ mpd_db_file }}"
+    cache_directory: /tmp
+    compress: true
+
+  curl:
+    enabled: true
+    verify_peer: true
+    verify_host: true
+    # proxy: "proxy.isp.com:8080"
+    # proxy_user: "user"
+    # proxy_password: "password"
+
+mpd_outputs:
+  - name: "Null Output"
+    type: "null"
+  - name: "Pulse Output"
+    type: "pulse"
+
+mpd_zeroconf:
+  enabled: false
+
+mpd_radiostations:
+  - name: Gothic
+    stations:
+      - name: Radio Dunkle Welle
+        url: http://164.132.13.80:5090/stream
+      - name: Mera Luna FM
+        url: http://meralunafm.radionetz.de:8000/meralunafm.mp3
+  - name: Studio Brüssel
+    url: http://icecast.vrtcdn.be/stubru-high.mp3
+
+mpd_alarm_clock:
+  enable: false
+  radiostation: 'Radio Dunkle Welle'
+
+...

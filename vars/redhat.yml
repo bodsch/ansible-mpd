@@ -1,0 +1,8 @@
+---
+
+mpd_packages:
+  - mpd
+
+mpd_group: mpd
+
+...

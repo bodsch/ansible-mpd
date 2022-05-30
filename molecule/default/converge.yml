@@ -1,21 +1,11 @@
 ---
+
 - name: converge
   hosts: all
   any_errors_fatal: false
-
-  environment:
-    NETRC: ''
-
-  vars:
-    mpd_group: audio
-
-    mpd_radiostations:
-      - name: Radio Dunkle Welle
-        url: http://164.132.13.80:5090/stream
-
-    mpd_alarm_clock:
-      enable: false
-      radiostation: 'Radio Dunkle Welle'
+  gather_facts: true
 
   roles:
-    - role: bodsch.mpd
+    - role: ansible-mpd
+
+...

@@ -1,3 +1,11 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+{% set _loglevel = "default" %}
+
+{% if mpd_log_level is defined and
+      mpd_log_level in ["default","secure","verbose"] %}
+  {% set _loglevel = mpd_log_level %}
+{% endif %}
 
 music_directory         "{{ mpd_music_directory }}"
 playlist_directory      "{{ mpd_playlist_directory }}"
@@ -13,21 +21,21 @@ bind_to_address         "{{ mpd_bind_to_address }}"
 port                    "{{ mpd_port }}"
 
 log_file                "{{ mpd_log_file }}"
-log_level               "{{ mpd_log_level }}"
+log_level               "{{ _loglevel }}"
 
 pid_file                "{{ mpd_pid_file }}"
 
-restore_paused          "{% if mpd_restore_paused %}yes{% else %}no{% endif %}"
-auto_update             "{% if mpd_auto_update %}yes{% else %}no{% endif %}"
-follow_inside_symlinks  "{% if mpd_follow_inside_symlinks %}yes{% else %}no{% endif %}"
-follow_outside_symlinks "{% if mpd_follow_outside_symlinks %}yes{% else %}no{% endif %}"
+restore_paused          "{{ mpd_restore_paused | bool | ternary( 'yes', 'no') }}"
+auto_update             "{{ mpd_auto_update | bool | ternary( 'yes', 'no') }}"
+follow_inside_symlinks  "{{ mpd_follow_inside_symlinks | bool | ternary( 'yes', 'no') }}"
+follow_outside_symlinks "{{ mpd_follow_outside_symlinks | bool | ternary( 'yes', 'no') }}"
 
-{% if mpd_zeroconf is defined and mpd_zeroconf.enabled is defined and mpd_zeroconf.enabled == true %}
-zeroconf_enabled        "yes"
-{% else %}
-zeroconf_enabled        "no"
+{% if mpd_zeroconf is defined and
+      mpd_zeroconf.enabled is defined %}
+zeroconf_enabled        "{{ mpd_zeroconf.enabled | bool | ternary( 'yes', 'no') }}"
 {% endif %}
-{% if mpd_zeroconf is defined and mpd_zeroconf.name is defined %}
+{% if mpd_zeroconf is defined and
+      mpd_zeroconf.name is defined %}
 zeroconf_name           "{{ mpd_zeroconf.name }}"
 {% else %}
 zeroconf_name           "Music Player"
@@ -45,28 +53,28 @@ database {
 }
 {% endif %}
 
-{% for input in mpd_inputs.items() | sort -%}
+{% for i, d in mpd_inputs.items() | sort %}
+  {% set _enabled = d | find_in_dict('enabled', False) %}
+  {% set _ = d.pop("enabled") %}
+  {% if _enabled %}
 input {
-{% for p in input %}
-{%- if p is string %}
-  plugin "{{ p }}"
-{% endif %}
-{%- if p is mapping %}
-{% for k, v in p.items() %}
-{%- if v == "True" or v == "False" -%}{%- if v == "True" -%}{%- set v = "yes" -%}{%- else -%} {%- set v = "no" -%}{%- endif -%}{% endif %}
+  plugin "{{ i }}"
+    {% for k, v in d.items() %}
+      {% if v | type_debug == "bool" %}
+        {% set v = v | bool | ternary( 'yes', 'no') %}
+      {% endif %}
   {{ k }} "{{ v }}"
-{% endfor -%}
-{% endif %}
-{% endfor %}
+    {% endfor -%}
 }
+  {% endif %}
 
 {% endfor %}
 
 {% for output in mpd_outputs %}
 audio_output {
-{% for k, v in output.items() %}
+  {% for k, v in output.items() %}
   {{ k }} "{{ v }}"
-{% endfor %}
+  {% endfor %}
 }
 
 {% endfor %}
