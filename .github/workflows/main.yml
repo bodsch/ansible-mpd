@@ -78,7 +78,7 @@ jobs:
           DISTRIBUTION: ${{ matrix.image }}
 
   publish:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs:
       - deb
     runs-on: ubuntu-18.04
