@@ -33,12 +33,10 @@ follow_outside_symlinks "{{ mpd_follow_outside_symlinks | bool | ternary( 'yes',
 {% if mpd_zeroconf is defined and
       mpd_zeroconf.enabled is defined %}
 zeroconf_enabled        "{{ mpd_zeroconf.enabled | bool | ternary( 'yes', 'no') }}"
-{% endif %}
-{% if mpd_zeroconf is defined and
-      mpd_zeroconf.name is defined %}
+  {% if mpd_zeroconf is defined and
+        mpd_zeroconf.name is defined %}
 zeroconf_name           "{{ mpd_zeroconf.name }}"
-{% else %}
-zeroconf_name           "Music Player"
+  {% endif %}
 {% endif %}
 
 volume_normalization    "yes"

@@ -8,6 +8,4 @@ mpd_packages:
   - mpc
   - net-tools
 
-mpd_group: nogroup
-
 ...
