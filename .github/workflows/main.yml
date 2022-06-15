@@ -87,4 +87,4 @@ jobs:
         uses: robertdebock/galaxy-action@1.2.0
         with:
           galaxy_api_key: ${{ secrets.galaxy_api_key }}
-          git_branch: master
+          git_branch: main
