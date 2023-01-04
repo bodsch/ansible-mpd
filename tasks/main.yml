@@ -1,7 +1,7 @@
 ---
 
 - name: prepare
-  include_tasks: prepare.yml
+  ansible.builtin.include_tasks: prepare.yml
   tags:
     - mpd_prepare
     - mpd_download
@@ -9,23 +9,23 @@
     - mpd_configure
 
 - name: install
-  include_tasks: install.yml
+  ansible.builtin.include_tasks: install.yml
   tags:
     - mpd_install
 
 - name: configure
-  include_tasks: configure.yml
+  ansible.builtin.include_tasks: configure.yml
   tags:
     - mpd_configure
 
 - name: alarm clock
-  include_tasks: alarm-clock.yml
+  ansible.builtin.include_tasks: alarm-clock.yml
   tags:
     - mpd_configure
     - mpd_alarm_clock
 
 - name: service
-  include_tasks: service.yml
+  ansible.builtin.include_tasks: service.yml
   tags:
     - mpd_service
 

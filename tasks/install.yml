@@ -1,11 +1,11 @@
 ---
 
 - name: ensure mpd is installed
-  package:
+  ansible.builtin.package:
     name: "{{ mpd_packages }}"
 
 - name: add user {{ mpd_user }} to groups
-  user:
+  ansible.builtin.user:
     name: "{{ mpd_user }}"
     groups: "{{ item }}"
     append: true
@@ -13,23 +13,23 @@
     "{{ mpd_groups | sort | unique }}"
 
 - name: support redhat based version 7
+  when:
+    - ansible_os_family | lower == 'redhat'
+    - ansible_distribution_version | int == 7
   block:
     - name: ensure mpd.service.d is present
-      file:
+      ansible.builtin.file:
         dest: /etc/systemd/system/mpd.service.d
         state: directory
         mode: 0750
 
     - name: create overwrite.conf for systemd
-      template:
+      ansible.builtin.template:
         src: systemd/overwrite.conf.j2
         dest: "/etc/systemd/system/mpd.service.d/override.conf"
         mode: 0440
       notify:
         - systemctl daemon-reload
         - restart mpd
-  when:
-    - ansible_os_family | lower == 'redhat'
-    - ansible_distribution_version | int == 7
 
 ...

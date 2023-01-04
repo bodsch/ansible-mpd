@@ -27,10 +27,7 @@ class FilterModule(object):
 
     def encode(self, data):
         """
-
         """
-        result = None
-
         data = data.replace(' ', '_')
         data = data.lower()
 

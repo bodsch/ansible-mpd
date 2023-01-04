@@ -6,13 +6,15 @@ Ansible role to setup mpd (Music Player Daemon)
 The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only available on Debian based systems, sorry.
 
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bodsch/ansible-mpd/CI)][ci]
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-mpd/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-mpd)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-mpd)][releases]
+[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
 
 [ci]: https://github.com/bodsch/ansible-mpd/actions
 [issues]: https://github.com/bodsch/ansible-mpd/issues?q=is%3Aopen+is%3Aissue
 [releases]: https://github.com/bodsch/ansible-mpd/releases
+[quality]: https://galaxy.ansible.com/bodsch/mpd
 
 
 ## usage
@@ -147,6 +149,13 @@ mpd_alarm_clock:
     hour: 6
 ```
 
+
+## Author
+
+- Bodo Schulz
+
 ## License
 
-Apache 2.0
+[Apache](LICENSE)
+
+`FREE SOFTWARE, HELL YEAH!`

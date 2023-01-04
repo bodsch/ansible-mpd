@@ -1,7 +1,7 @@
 ---
 
 - name: ensure mpd is configured
-  template:
+  ansible.builtin.template:
     src: mpd.conf.j2
     dest: /etc/mpd.conf
     owner: root
@@ -11,7 +11,7 @@
   notify: restart mpd
 
 - name: create radiostations
-  template:
+  ansible.builtin.template:
     src: mpd_radiostations.m3u.j2
     dest: "{{ mpd_playlist_directory }}/{{ item.name | encode }}.m3u"
     owner: '{{ mpd_user }}'

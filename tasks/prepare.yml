@@ -1,7 +1,7 @@
 ---
 
 - name: include OS specific configuration ({{ ansible_distribution }} ({{ ansible_os_family }}) {{ ansible_distribution_major_version }})
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       paths:
@@ -18,63 +18,25 @@
         - default.yaml
       skip: true
 
-# - block:
-#     - name: import EPEL GPG key.
-#       rpm_key:
-#         key: https://archive.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
-#         state: present
-#
-#     - name: install EPEL repository
-#       yum_repository:
-#         name: epel
-#         state: present
-#         description: Extra Packages for Enterprise Linux {{ ansible_distribution_major_version }} - $basearch
-#         baseurl: http://download.fedoraproject.org/pub/epel/{{ ansible_distribution_major_version }}/$basearch
-#         gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
-#         metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-{{ ansible_distribution_major_version }}&arch=$basearch&infra=$infra&content=$contentdir
-#         failovermethod: priority
-#         gpgcheck: 1
-#         enabled: 1
-#
-#     - name: install rpmfusion repository
-#       package:
-#         name: https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
-#         state: present
-#
-#     # https://bugs.centos.org/view.php?id=16604
-#     - name: activate PowerTools repository
-#       ini_file:
-#         dest: /etc/yum.repos.d/CentOS-PowerTools.repo
-#         section: PowerTools
-#         option: enabled
-#         value: "1"
-#         mode: 0644
-#       when:
-#         - ansible_distribution_version | int >= 8
-#         - not ansible_distribution | lower == "oraclelinux"
-#
-#   when: ansible_os_family | lower == 'redhat'
-
 - name: update package cache
-  package:
+  ansible.builtin.package:
     update_cache: true
 
 - name: dependecies
+  when:
+    - mpd_requirements is defined
+    - mpd_requirements | count > 0
   block:
     - name: install dependency
-      package:
+      ansible.builtin.package:
         name: "{{ mpd_requirements }}"
         state: present
 
     - name: update facts to get latest information
-      setup:
-  when:
-    - mpd_requirements is defined
-    - mpd_requirements | count > 0
+      ansible.builtin.setup:
 
 - name: merge alarm clock configuration between defaults and custom
-  set_fact:
-    mpd_alarm_clock: "{{ mpd_defaults_alarm_clock |
-      combine( mpd_alarm_clock, recursive=True ) }}"
+  ansible.builtin.set_fact:
+    mpd_alarm_clock: "{{ mpd_defaults_alarm_clock | combine(mpd_alarm_clock, recursive=True) }}"
 
 ...

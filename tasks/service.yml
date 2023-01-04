@@ -1,7 +1,7 @@
 ---
 
 - name: service enabled and running
-  service:
+  ansible.builtin.service:
     name: mpd
     enabled: true
     state: started
