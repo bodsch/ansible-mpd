@@ -25,14 +25,14 @@ log_level               "{{ _loglevel }}"
 
 pid_file                "{{ mpd_pid_file }}"
 
-restore_paused          "{{ mpd_restore_paused | bool | ternary( 'yes', 'no') }}"
-auto_update             "{{ mpd_auto_update | bool | ternary( 'yes', 'no') }}"
-follow_inside_symlinks  "{{ mpd_follow_inside_symlinks | bool | ternary( 'yes', 'no') }}"
-follow_outside_symlinks "{{ mpd_follow_outside_symlinks | bool | ternary( 'yes', 'no') }}"
+restore_paused          "{{ mpd_restore_paused | bool | bodsch.core.config_bool() }}"
+auto_update             "{{ mpd_auto_update | bool | bodsch.core.config_bool() }}"
+follow_inside_symlinks  "{{ mpd_follow_inside_symlinks | bool | bodsch.core.config_bool() }}"
+follow_outside_symlinks "{{ mpd_follow_outside_symlinks | bool | bodsch.core.config_bool() }}"
 
 {% if mpd_zeroconf is defined and
       mpd_zeroconf.enabled is defined %}
-zeroconf_enabled        "{{ mpd_zeroconf.enabled | bool | ternary( 'yes', 'no') }}"
+zeroconf_enabled        "{{ mpd_zeroconf.enabled | bool | bodsch.core.config_bool() }}"
   {% if mpd_zeroconf is defined and
         mpd_zeroconf.name is defined %}
 zeroconf_name           "{{ mpd_zeroconf.name }}"
@@ -58,8 +58,8 @@ database {
 input {
   plugin "{{ i }}"
     {% for k, v in d.items() %}
-      {% if v | type_debug == "bool" %}
-        {% set v = v | bool | ternary( 'yes', 'no') %}
+      {% if v | bodsch.core.type == "bool" %}
+        {% set v = v | bool | bodsch.core.config_bool() %}
       {% endif %}
   {{ k }} "{{ v }}"
     {% endfor -%}

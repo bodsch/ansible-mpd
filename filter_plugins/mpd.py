@@ -14,16 +14,9 @@ class FilterModule(object):
 
     def filters(self):
         return {
-            'type': self.var_type,
             'encode': self.encode,
             'find_in_dict': self.find_in_dict
         }
-
-    def var_type(self, var):
-        """
-          Get the type of a variable
-        """
-        return type(var).__name__
 
     def encode(self, data):
         """
@@ -31,11 +24,11 @@ class FilterModule(object):
         data = data.replace(' ', '_')
         data = data.lower()
 
-        spcial_char_map = {
+        special_char_map = {
             ord('ä'): 'ae', ord('ü'): 'ue', ord('ö'): 'oe', ord('ß'): 'ss'
         }
 
-        data = data.translate(spcial_char_map)
+        data = data.translate(special_char_map)
 
         return data
 

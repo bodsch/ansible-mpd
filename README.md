@@ -17,6 +17,20 @@ The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only a
 [quality]: https://galaxy.ansible.com/bodsch/mpd
 
 
+## Requirements & Dependencies
+
+Ansible Collections
+
+- [bodsch.core](https://github.com/bodsch/ansible-collection-core)
+
+```bash
+ansible-galaxy collection install bodsch.core
+```
+or
+```bash
+ansible-galaxy collection install --requirements-file collections.yml
+```
+
 ## usage
 
 ```yaml
@@ -158,4 +172,4 @@ mpd_alarm_clock:
 
 [Apache](LICENSE)
 
-`FREE SOFTWARE, HELL YEAH!`
+**FREE SOFTWARE, HELL YEAH!**

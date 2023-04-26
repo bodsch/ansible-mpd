@@ -1,11 +1,8 @@
 [Unit]
-After=network.target
-After=sound.target
+After           = network.target
+After           = sound.target
 
 [Service]
-ExecStartPre=/bin/mkdir -p {{ mpd_pid_file | dirname }}
-ExecStartPre=/bin/chown -R {{ mpd_user }}:{{ mpd_group }} {{ mpd_pid_file | dirname }}
-ExecStartPre=/bin/chmod 0775 {{ mpd_pid_file | dirname }}
-#User=mpd
-#PAMName=system-local-login
-
+ExecStartPre    = /bin/mkdir -p {{ mpd_pid_file | dirname }}
+ExecStartPre    = /bin/chown -R {{ mpd_user }}:{{ mpd_group }} {{ mpd_pid_file | dirname }}
+ExecStartPre    = /bin/chmod 0775 {{ mpd_pid_file | dirname }}
