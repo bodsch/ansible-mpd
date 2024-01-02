@@ -1,7 +1,6 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 {% set _loglevel = "default" %}
-
 {% if mpd_log_level is defined and
       mpd_log_level in ["default","secure","verbose"] %}
   {% set _loglevel = mpd_log_level %}
@@ -22,9 +21,11 @@ port                    "{{ mpd_port }}"
 
 log_file                "{{ mpd_log_file }}"
 log_level               "{{ _loglevel }}"
+{% if ansible_service_mgr | lower != "systemd" %}
 
 pid_file                "{{ mpd_pid_file }}"
 
+{% endif %}
 restore_paused          "{{ mpd_restore_paused | bool | bodsch.core.config_bool() }}"
 auto_update             "{{ mpd_auto_update | bool | bodsch.core.config_bool() }}"
 follow_inside_symlinks  "{{ mpd_follow_inside_symlinks | bool | bodsch.core.config_bool() }}"
@@ -37,20 +38,20 @@ zeroconf_enabled        "{{ mpd_zeroconf.enabled | bool | bodsch.core.config_boo
         mpd_zeroconf.name is defined %}
 zeroconf_name           "{{ mpd_zeroconf.name }}"
   {% endif %}
-{% endif %}
 
+{% endif %}
 volume_normalization    "yes"
 
 filesystem_charset      "UTF-8"
 
 {% if mpd_database %}
 database {
-{% for k, v in mpd_database.items() %}
+  {% for k, v in mpd_database.items() %}
   {{ k }} "{{ v }}"
-{% endfor %}
+  {% endfor %}
 }
-{% endif %}
 
+{% endif %}
 {% for i, d in mpd_inputs.items() | sort %}
   {% set _enabled = d | find_in_dict('enabled', False) %}
   {% set _ = d.pop("enabled") %}

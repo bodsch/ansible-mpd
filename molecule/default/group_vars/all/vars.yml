@@ -1,7 +1,5 @@
 ---
 
-mpd_group: audio
-
 mpd_inputs:
   simple:
     enabled: true

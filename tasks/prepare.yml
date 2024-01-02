@@ -18,10 +18,6 @@
         - default.yaml
       skip: true
 
-- name: update package cache
-  ansible.builtin.package:
-    update_cache: true
-
 - name: dependecies
   when:
     - mpd_requirements is defined
@@ -34,9 +30,5 @@
 
     - name: update facts to get latest information
       ansible.builtin.setup:
-
-- name: merge alarm clock configuration between defaults and custom
-  ansible.builtin.set_fact:
-    mpd_alarm_clock: "{{ mpd_defaults_alarm_clock | combine(mpd_alarm_clock, recursive=True) }}"
 
 ...

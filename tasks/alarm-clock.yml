@@ -1,5 +1,9 @@
 ---
 
+- name: merge alarm clock configuration between defaults and custom
+  ansible.builtin.set_fact:
+    mpd_alarm_clock: "{{ mpd_defaults_alarm_clock | combine(mpd_alarm_clock, recursive=True) }}"
+
 - name: alarm clock
   when:
     - mpd_alarm_clock.enable is defined

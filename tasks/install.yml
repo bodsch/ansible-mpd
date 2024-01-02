@@ -1,4 +1,23 @@
 ---
+# - name: user and group handling
+#   when:
+#     - mpd_user != "root"
+#   block:
+#     - name: create alertmanager group
+#       ansible.builtin.group:
+#         name: "{{ mpd_group }}"
+#         state: present
+#         system: true
+#
+#     - name: create alertmanager user
+#       ansible.builtin.user:
+#         name: "{{ mpd_user }}"
+#         groups: "{{ mpd_group }}"
+#         append: true
+#         shell: /usr/sbin/nologin
+#         # system: true
+#         createhome: false
+#         home: "{{ mpd_state_file | dirname }}"
 
 - name: ensure mpd is installed
   ansible.builtin.package:
@@ -11,25 +30,24 @@
     append: true
   loop:
     "{{ mpd_groups | sort | unique }}"
-
-- name: support redhat based version 7
   when:
-    - ansible_os_family | lower == 'redhat'
-    - ansible_distribution_version | int == 7
-  block:
-    - name: ensure mpd.service.d is present
-      ansible.builtin.file:
-        dest: /etc/systemd/system/mpd.service.d
-        state: directory
-        mode: 0750
+    - mpd_groups is defined
+    - mpd_groups | count > 0
 
-    - name: create overwrite.conf for systemd
-      ansible.builtin.template:
-        src: systemd/overwrite.conf.j2
-        dest: "/etc/systemd/system/mpd.service.d/override.conf"
-        mode: 0440
-      notify:
-        - systemctl daemon-reload
-        - restart mpd
+- name: ensure log directory is present
+  ansible.builtin.file:
+    dest: "{{ mpd_log_file | dirname }}"
+    state: directory
+    owner: "{{ mpd_user }}"
+    group: "{{ mpd_group }}"
+    mode: 0770
+
+- name: ensure music directory is present
+  ansible.builtin.file:
+    dest: "{{ mpd_music_directory }}"
+    state: directory
+    owner: "{{ mpd_user }}"
+    group: "{{ mpd_group }}"
+    mode: 0755
 
 ...
