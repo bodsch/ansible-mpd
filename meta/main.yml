@@ -2,6 +2,7 @@
 
 galaxy_info:
   role_name: mpd
+  namespace: bodsch
 
   author: Bodo Schulz
   description: install and configure the Music Player Daemon
