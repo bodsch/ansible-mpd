@@ -9,12 +9,13 @@ The command line interface [mpc](https://www.musicpd.org/clients/mpc/) is only a
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-mpd/main.yml?branch=main)][ci]
 [![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-mpd)][issues]
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-mpd)][releases]
-[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
+[![Ansible Downloads](https://img.shields.io/ansible/role/d/bodsch/mpd?logo=ansible)][galaxy]
+
 
 [ci]: https://github.com/bodsch/ansible-mpd/actions
 [issues]: https://github.com/bodsch/ansible-mpd/issues?q=is%3Aopen+is%3Aissue
 [releases]: https://github.com/bodsch/ansible-mpd/releases
-[quality]: https://galaxy.ansible.com/bodsch/mpd
+[galaxy]: https://galaxy.ansible.com/ui/standalone/roles/bodsch/mpd
 
 
 ## Requirements & Dependencies
@@ -31,7 +32,29 @@ or
 ansible-galaxy collection install --requirements-file collections.yml
 ```
 
-## usage
+## Operating systems
+
+Tested on
+
+* Arch Linux
+* Artix Linux
+* Debian based
+    - Debian 10 / 11 / 12 / 13
+    - Ubuntu 20.10 / 22.04 / 24.04
+
+
+## Contribution
+
+Please read [Contribution](CONTRIBUTING.md)
+
+## Development,  Branches (Git Tags)
+
+The `master` Branch is my *Working Horse* includes the "latest, hot shit" and can be complete broken!
+
+If you want to use something stable, please use a [Tagged Version](https://github.com/bodsch/ansible-influxdb/tags)!
+
+
+## Configuration
 
 ```yaml
 mpd_outputs:
