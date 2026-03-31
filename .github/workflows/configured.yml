@@ -1,11 +1,12 @@
 ---
 
-name: CI
+name: configured mpd
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows:
-      - "code linter"
+      - "CI"
     types:
       - completed
 
@@ -18,7 +19,8 @@ env:
   ANSIBLE_FORCE_COLOR: '1'
 
 jobs:
-  arch:
+
+  debian:
     name: "${{ matrix.image }}: ansible ${{ matrix.ansible-version }}, python ${{ matrix.python_version }}"
     runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
@@ -26,8 +28,8 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - archlinux:latest
-          - artixlinux:latest
+          - debian:12
+          - debian:13
         ansible-version:
           - '9.5'
         python_version:
@@ -65,70 +67,21 @@ jobs:
             -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
             -e DISTRIBUTION="${{ matrix.image }}"
 
-  debian:
-    name: "${{ matrix.image }}: ansible ${{ matrix.ansible-version }}, python ${{ matrix.python_version }}"
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - debian:11
-          - debian:12
-        python_version:
-          - '3.11'
-          - '3.12'
-        ansible-version:
-          - '8.5'
-        scenario:
-          - default
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v4
-        with:
-          path: 'ansible-mpd'
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: 🐍 set up python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "${{ matrix.python_version }}"
-
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-
-      - name: force reinstall of community.docker
-        run: |
-          mkdir -p /home/runner/.ansible/collections
-          ansible-galaxy collection install community.docker --force
-
-      - name: test with tox
-        run: |
-          make \
-            test \
-            -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
-            -e DISTRIBUTION="${{ matrix.image }}"
-
   ubuntu:
     name: "${{ matrix.image }}: ansible ${{ matrix.ansible-version }}, python ${{ matrix.python_version }}"
     runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
+    needs:
+      - debian
     strategy:
       fail-fast: false
       matrix:
         image:
-          - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
-        python_version:
-          - '3.11'
-          - '3.12'
         ansible-version:
-          - '8.5'
+          - '9.5'
+        python_version:
+          - '3.12'
         scenario:
           - default
 

@@ -8,15 +8,9 @@ dependency:
 driver:
   name: docker
 
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
-  flake8 .
-
 platforms:
   - name: instance
-    image: "ghcr.io/bodsch/docker-ansible/ansible-${DISTRIBUTION:-debian:11}"
+    image: "ghcr.io/bodsch/docker-ansible/ansible-${DISTRIBUTION:-debian:13}"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     docker_host: "${DOCKER_HOST:-unix://run/docker.sock}"
     privileged: true
@@ -39,12 +33,10 @@ provisioner:
   config_options:
     defaults:
       deprecation_warnings: true
-      stdout_callback: yaml
+      callback_result_format: yaml
       callbacks_enabled: profile_tasks
       gathering: smart
-      fact_caching: jsonfile
-      fact_caching_timeout: 8640
-      fact_caching_connection: ansible_facts
+      fact_caching_timeout: 320
 
 scenario:
   test_sequence:
@@ -54,6 +46,7 @@ scenario:
     - create
     - prepare
     - converge
+    - idempotence
     - verify
     - destroy
 
