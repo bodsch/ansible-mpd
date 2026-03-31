@@ -27,7 +27,6 @@ jobs:
       matrix:
         image:
           - archlinux:latest
-          - artixlinux:latest
         ansible-version:
           - '9.5'
         python_version:
