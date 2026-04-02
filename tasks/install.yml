@@ -1,23 +1,4 @@
 ---
-# - name: user and group handling
-#   when:
-#     - mpd_user != "root"
-#   block:
-#     - name: create alertmanager group
-#       ansible.builtin.group:
-#         name: "{{ mpd_group }}"
-#         state: present
-#         system: true
-#
-#     - name: create alertmanager user
-#       ansible.builtin.user:
-#         name: "{{ mpd_user }}"
-#         groups: "{{ mpd_group }}"
-#         append: true
-#         shell: /usr/sbin/nologin
-#         # system: true
-#         createhome: false
-#         home: "{{ mpd_state_file | dirname }}"
 
 - name: ensure mpd is installed
   ansible.builtin.package:
@@ -40,7 +21,7 @@
     state: directory
     owner: "{{ mpd_user }}"
     group: "{{ mpd_group }}"
-    mode: 0770
+    mode: "0770"
 
 - name: ensure music directory is present
   ansible.builtin.file:
@@ -48,6 +29,6 @@
     state: directory
     owner: "{{ mpd_user }}"
     group: "{{ mpd_group }}"
-    mode: 0755
+    mode: "0755"
 
 ...

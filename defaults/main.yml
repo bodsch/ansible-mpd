@@ -49,7 +49,7 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
-mpd_group: "{{ 'audio' if ansible_os_family | lower == 'debian' else 'mpd' }}"
+mpd_group: "{{ 'audio' if ansible_facts.os_family | lower == 'debian' else 'mpd' }}"
 
 mpd_groups:
   - audio
@@ -57,12 +57,12 @@ mpd_groups:
 mpd_bind_to_address: '0.0.0.0'
 mpd_port: 6600
 
-mpd_firewall_zones: []
-
 mpd_radiostations: []
 
-mpd_used_cron_daemon: "{{ 'cron' if ansible_os_family | lower == 'debian' else 'cronie' }}"
+mpd_used_cron_daemon: "{{ 'cron' if ansible_facts.os_family | lower == 'debian' else 'cronie' }}"
 
 mpd_alarm_clock: {}
+#  enable: false
+#  radiostation: 'Radio Dunkle Welle'
 
 ...

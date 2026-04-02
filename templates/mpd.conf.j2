@@ -21,7 +21,7 @@ port                    "{{ mpd_port }}"
 
 log_file                "{{ mpd_log_file }}"
 log_level               "{{ _loglevel }}"
-{% if ansible_service_mgr | lower != "systemd" %}
+{% if ansible_facts.service_mgr | lower != "systemd" %}
 
 pid_file                "{{ mpd_pid_file }}"
 

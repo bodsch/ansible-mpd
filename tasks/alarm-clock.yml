@@ -14,7 +14,7 @@
         src: "{{ item }}.j2"
         dest: "/usr/local/bin/{{ item }}"
         owner: '{{ mpd_user }}'
-        mode: 0755
+        mode: "0755"
       loop:
         - mpd-start.sh
         - mpd-stop.sh

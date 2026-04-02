@@ -1,6 +1,11 @@
 ---
 
-mpd_requirements: []
+mpd_dependencies: []
+
+mpd_packages:
+  - mpd
+  - mpc
+  - net-tools
 
 mpd_defaults_alarm_clock:
   enable: false

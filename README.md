@@ -99,6 +99,10 @@ mpd_log_file: /var/log/mpd/mpd.log
 mpd_log_level: default
 
 mpd_user: mpd
+mpd_group: "{{ 'audio' if ansible_facts.os_family | lower == 'debian' else 'mpd' }}"
+
+mpd_groups:
+  - audio
 
 mpd_bind_to_address: '0.0.0.0'
 mpd_port: 6600

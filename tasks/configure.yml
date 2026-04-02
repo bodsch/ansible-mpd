@@ -6,7 +6,7 @@
     dest: /etc/mpd.conf
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
     backup: true
   notify: restart mpd
 
@@ -16,7 +16,7 @@
     dest: "{{ mpd_playlist_directory }}/{{ item.name | encode }}.m3u"
     owner: '{{ mpd_user }}'
     group: '{{ mpd_group }}'
-    mode: 0644
+    mode: "0644"
   loop:
     "{{ mpd_radiostations }}"
   loop_control:
