@@ -49,9 +49,9 @@ Please read [Contribution](CONTRIBUTING.md)
 
 ## Development,  Branches (Git Tags)
 
-The `master` Branch is my *Working Horse* includes the "latest, hot shit" and can be complete broken!
+The `main` Branch is my *Working Horse* includes the "latest, hot shit" and can be complete broken!
 
-If you want to use something stable, please use a [Tagged Version](https://github.com/bodsch/ansible-influxdb/tags)!
+If you want to use something stable, please use a [Tagged Version](https://github.com/bodsch/ansible-mpd/tags)!
 
 
 ## Configuration
